@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Error</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    .error-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 20px;
+      border-radius: 5px;
+      color: #721c24;
+    }
+    .error-container h1 {
+      margin-top: 0;
+    }
+    .error-container p {
+      margin: 10px 0;
+    }
+    .error-container a {
+      color: #721c24;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .error-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <h1>An Error Has Occurred</h1>
+  <p th:if="${error}" th:text="${error}">Unknown error occurred</p>
+  <p th:unless="${error}">Something went wrong. Please try again later.</p>
+  <p>
+    <a href="/">Go back to Home</a>
+  </p>
+</div>
+</body>
+</html>

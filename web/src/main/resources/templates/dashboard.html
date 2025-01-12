@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <style>
+        .crypto-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+        }
+        .crypto-info {
+            width: 40%;
+        }
+        .crypto-chart {
+            width: 50%;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Cryptocurrency Market Data</h1>
+
+<!-- Если ошибка -->
+<div th:if="${error}">
+    <p style="color: red;">[[${error}]]</p>
+</div>
+
+<!-- Карточка криптовалют -->
+<div th:each="data : ${marketData}" class="crypto-card">
+    <div class="crypto-info">
+        <h3>Crypto Info</h3>
+        <p>
+            Last Price: <span th:text="${data.closePrice}">0.0</span><br>
+            Volume: <span th:text="${data.volume}">0</span><br>
+            Open: <span th:text="${data.openPrice}"></span><br>
+            High: <span th:text="${data.highPrice}"></span><br>
+            Low: <span th:text="${data.lowPrice}"></span><br>
+        </p>
+    </div>
+    <div class="crypto-chart">
+        <canvas th:attr="id='chart-' + ${data.timestamp}"></canvas>
+    </div>
+</div>
+
+<!-- Подключение Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    const marketData = /*[[${marketData}]]*/ [];
+
+    marketData.forEach((entry, index) => {
+        const ctx = document.getElementById('chart-' + entry.timestamp).getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Open', 'Close', 'High', 'Low'],
+                datasets: [{
+                    label: 'Market Prices',
+                    data: [entry.openPrice, entry.closePrice, entry.highPrice, entry.lowPrice],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { display: true }, y: { display: true } }
+            }
+        });
+    });
+</script>
+</body>
+</html>

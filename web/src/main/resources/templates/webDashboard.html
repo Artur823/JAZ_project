@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Crypto Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #0b74de;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .crypto-dashboard {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+    }
+
+    .crypto-card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+    }
+
+    .crypto-card h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      font-size: 18px;
+    }
+
+    .crypto-info p {
+      margin: 5px 0;
+      line-height: 1.6;
+    }
+
+    .crypto-chart {
+      margin-top: 20px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    footer {
+      background-color: #0b74de;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    .error-message {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Шапка -->
+<header>
+  <h1>Cryptocurrency Market Dashboard</h1>
+</header>
+
+<!-- Основной контент -->
+<div class="crypto-dashboard" th:if="${marketData}" th:unless="${marketData.isEmpty()}">
+  <!-- Карточка для каждой криптовалюты -->
+  <div class="crypto-card" th:each="crypto : ${marketData}">
+
+    <!-- Информация о криптовалюте -->
+    <div class="crypto-info">
+      <h3 th:text="${crypto.symbol} + ' Market Overview'">BTCUSDT Market Overview</h3>
+      <p>
+        <strong>Last Price:</strong>
+        <span th:text="${@numberUtils.formatDecimal(crypto.data[0]?.closePrice, 2)}">$0.00</span><br>
+
+        <strong>24h Volume:</strong>
+        <span th:text="${@numberUtils.formatDecimal(crypto.data[0]?.volume, 2)}">0</span><br>
+
+        <strong>Open Price:</strong>
+        <span th:text="${@numberUtils.formatDecimal(crypto.data[0]?.openPrice, 2)}">$0.00</span><br>
+
+        <strong>High Price:</strong>
+        <span th:text="${@numberUtils.formatDecimal(crypto.data[0]?.highPrice, 2)}">$0.00</span><br>
+
+        <strong>Low Price:</strong>
+        <span th:text="${@numberUtils.formatDecimal(crypto.data[0]?.lowPrice, 2)}">$0.00</span>
+      </p>
+    </div>
+
+    <!-- График криптовалюты -->
+    <div class="crypto-chart">
+      <canvas th:attr="id=${'chart-' + crypto.symbol}"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<!-- Сообщение, если нет доступных данных -->
+<div class="error-message" th:if="${marketData == null || marketData.isEmpty()}">
+  <p>No market data is available at the moment.</p>
+</div>
+
+<!-- Подключение скриптов -->
+<script th:if="${marketData}">
+  const marketData = /*[[${marketData}]]*/ [];
+
+  // Построение графиков для данных
+  marketData.forEach(crypto => {
+    const labels = crypto.data.map(d => new Date(d.timestamp).toLocaleTimeString()); // Метки времени
+    const openPrices = crypto.data.map(d => d.openPrice);
+    const closePrices = crypto.data.map(d => d.closePrice);
+
+    const ctx = document.getElementById('chart-' + crypto.symbol).getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Open Price',
+            data: openPrices,
+            borderColor: 'rgba(0, 123, 255, 0.7)',
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            fill: true
+          },
+          {
+            label: 'Close Price',
+            data: closePrices,
+            borderColor: 'rgba(255, 99, 132, 0.7)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Timestamp (Time)' } },
+          y: { title: { display: true, text: 'Price (USD)' } }
+        }
+      }
+    });
+  });
+</script>
+
+<!-- Подвал -->
+<footer>
+  <p>&copy; 2024 Crypto Dashboard | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>

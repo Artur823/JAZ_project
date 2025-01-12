@@ -1,0 +1,4 @@
+http://localhost:8081/market-data?symbol=BTCUSDT&interval=1h.
+http://localhost:8080/dashboard - for example date
+http://localhost:8080/web/dashboard  - with real date
+http://localhost:8081/market-data
