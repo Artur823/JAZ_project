@@ -1,4 +1,33 @@
-http://localhost:8081/market-data?symbol=BTCUSDT&interval=1h.
-http://localhost:8080/dashboard - for example date
-http://localhost:8080/web/dashboard  - with real date
-http://localhost:8081/market-data
+        // API //
+
+http://localhost:8082/api/trades
+
+http://localhost:8082/api/kline-data
+
+http://localhost:8082/api/market-data
+
+http://localhost:8082/api/order-book
+
+http://localhost:8082/api/user-profiles
+
+
+вы получите данные из Binance API, сохраните их в базу данных и вернете в ответе.
+http://localhost:8082/api/market-data/fetch?symbol=BTCUSDT
+
+
+
+  // FRONTEND//
+
+
+http://localhost:8080/api/trades
+
+http://localhost:8080/api/kline-data
+
+http://localhost:8080/api/market-data
+
+http://localhost:8080/api/order-book
+
+http://localhost:8080/api/user-profiles
+
+        String apiKey = "IIXqoIgEh6Tmy6gOSlMwey2jqeV7RdNhIbGoVAftgkg3wefa0cBKYGJ9zxYH3YN3";
+        String secretKey = "inzftDVqXwqNwFxUk6FhwkLlEuUnwXy9xOU9OonOzHQUX52LC4GqT4alEocvSrMb";

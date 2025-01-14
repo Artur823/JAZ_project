@@ -1,6 +1,0 @@
-server:
-  port: 8080
-
-binance:
-  api-key: "IIXqoIgEh6Tmy6gOSlMwey2jqeV7RdNhIbGoVAftgkg3wefa0cBKYGJ9zxYH3YN3"
-  secret-key: "inzftDVqXwqNwFxUk6FhwkLlEuUnwXy9xOU9OonOzHQUX52LC4GqT4alEocvSrMb"
